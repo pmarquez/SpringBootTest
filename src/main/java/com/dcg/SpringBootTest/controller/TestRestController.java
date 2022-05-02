@@ -8,6 +8,7 @@ import com.dcg.SpringBootTest.PersonService;
 import lombok.extern.java.Log;
 import com.dcg.SpringBootTest.model.person.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,11 +49,14 @@ public class TestRestController {
     PersonService personSvc;
 
     @PostMapping ( {""} )
-    public ResponseEntity<String> persistPerson ( @RequestBody Person person ) {
+    public ResponseEntity<Void> persistPerson ( @RequestBody Person person ) {
 
         String personId = personSvc.persistPerson ( person );
 
-        return new ResponseEntity<> ( personId, HttpStatus.CREATED );
+        HttpHeaders headers = new HttpHeaders ( );
+        headers.add("Location", personId );
+
+        return new ResponseEntity<> ( headers, HttpStatus.CREATED );
 
     }
 
